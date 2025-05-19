@@ -7,8 +7,12 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const pool = require('../models/db');
 const router = express.Router();
-
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// backend/routes/auth.js
+router.get('/google', (req, res, next) => {
+  console.log('Initiating Google Auth with scope: profile, email'); // Log để xác nhận
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
+router.get('/google', passport.authenticate('google', { scope: [ 'email'] }));
 
 router.get(
   '/google/callback',
