@@ -34,18 +34,15 @@ function LoginPage() {
   }, [user, authLoading, navigate]);
 
   const handleGoogleLogin = () => {
-    const backendUrl = process.env.REACT_APP_API_BASE_URL;
-    if (backendUrl) {
-      window.location.href = `${backendUrl}/auth/google`;
-    } else {
-      console.error("REACT_APP_API_BASE_URL is not defined! Please set it in your .env file for the frontend.");
-      alert("Lỗi cấu hình: Không thể xác định địa chỉ máy chủ. Vui lòng thử lại sau.");
-      // Fallback cho môi trường development nếu muốn:
-      // if (process.env.NODE_ENV === 'development') {
-      //   window.location.href = 'http://localhost:5000/auth/google';
-      // }
-    }
-  };
+  const backendUrl = process.env.REACT_APP_API_BASE_URL;
+  console.log("Attempting Google login. Backend URL:", backendUrl); // THÊM DÒNG NÀY
+  if (backendUrl) {
+    window.location.href = `${backendUrl}/auth/google`;
+  } else {
+    console.error("REACT_APP_API_BASE_URL is not defined!");
+    alert("Lỗi cấu hình: Không thể xác định địa chỉ máy chủ. Vui lòng thử lại sau.");
+  }
+};
 
   // Nếu AuthContext đang loading hoặc user đã tồn tại (nghĩa là đã đăng nhập và sắp được chuyển hướng)
   // thì hiển thị một trạng thái chờ hoặc không hiển thị gì cả.
