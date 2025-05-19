@@ -1,65 +1,34 @@
 // frontend/src/pages/LoginPage.js
 
+
+
 import React, { useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'; // Thêm useLocation
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../index.css';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const location = useLocation(); // Lấy location hiện tại
-  const { user, login, loading: authLoading } = useContext(AuthContext); // Thêm authLoading từ context
+  const { user, login } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
 
-  // Effect này chỉ để xử lý token từ URL khi được redirect từ backend
   useEffect(() => {
     const token = searchParams.get('token');
-    // Chỉ xử lý token nếu đang ở trang /login-success và có token
-    // (Giả định App.js của bạn có <Route path="/login-success" element={<LoginPage />} />)
-    if (token && location.pathname.includes('/login-success')) {
+    if (token) {
       login(token);
-      // Sau khi gọi login(token), `user` trong AuthContext sẽ được cập nhật.
-      // useEffect tiếp theo sẽ xử lý việc navigate đến /user.
-      // Để tránh việc navigate('/user') hai lần, chúng ta không navigate ở đây nữa.
-    }
-  }, [searchParams, login, location.pathname]);
-
-  // Effect này để chuyển hướng người dùng nếu họ đã đăng nhập
-  useEffect(() => {
-    // Nếu auth không còn loading VÀ đã có user
-    if (!authLoading && user) {
-      // Chuyển hướng đến trang user, thay thế lịch sử để người dùng không quay lại trang login/login-success
       navigate('/user', { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [searchParams, login, navigate]);
 
- const handleGoogleLogin = () => {
-  const backendUrl = process.env.REACT_APP_API_BASE_URL;
-  const targetUrl = backendUrl ? `${backendUrl}/auth/google` : 'URL_KHONG_XAC_DINH';
-  alert(`Sẽ chuyển hướng đến: ${targetUrl}`); // Để kiểm tra nhanh
-  console.log("Chuyển hướng đến URL backend:", targetUrl);
-
-  if (backendUrl) {
-    window.location.href = targetUrl;
-  } else {
-    console.error("REACT_APP_API_BASE_URL is not defined!");
-    alert("Lỗi cấu hình: Không thể xác định địa chỉ máy chủ. Vui lòng thử lại sau.");
-  }
-};
-
-  // Nếu AuthContext đang loading hoặc user đã tồn tại (nghĩa là đã đăng nhập và sắp được chuyển hướng)
-  // thì hiển thị một trạng thái chờ hoặc không hiển thị gì cả.
-  if (authLoading) {
-    return <div className="login-container" style={{textAlign: 'center', paddingTop: '50px'}}>Đang tải...</div>;
-  }
-
-  // Nếu đã có user (sau khi authLoading là false), useEffect ở trên sẽ xử lý navigate.
-  // Trả về null ở đây để tránh render form đăng nhập một cách không cần thiết.
   if (user) {
+    navigate('/user');
     return null;
   }
 
-  // Chỉ hiển thị form đăng nhập nếu chưa có user và AuthContext đã load xong
+  const handleGoogleLogin = () => {
+    window.location.href = 'https://webcaycanh.onrender.com/auth/google/callback';
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
