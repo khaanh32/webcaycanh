@@ -33,11 +33,14 @@ function LoginPage() {
     }
   }, [user, authLoading, navigate]);
 
-  const handleGoogleLogin = () => {
+ const handleGoogleLogin = () => {
   const backendUrl = process.env.REACT_APP_API_BASE_URL;
-  console.log("Attempting Google login. Backend URL:", backendUrl); // THÊM DÒNG NÀY
+  const targetUrl = backendUrl ? `${backendUrl}/auth/google` : 'URL_KHONG_XAC_DINH';
+  alert(`Sẽ chuyển hướng đến: ${targetUrl}`); // Để kiểm tra nhanh
+  console.log("Chuyển hướng đến URL backend:", targetUrl);
+
   if (backendUrl) {
-    window.location.href = `${backendUrl}/auth/google`;
+    window.location.href = targetUrl;
   } else {
     console.error("REACT_APP_API_BASE_URL is not defined!");
     alert("Lỗi cấu hình: Không thể xác định địa chỉ máy chủ. Vui lòng thử lại sau.");
